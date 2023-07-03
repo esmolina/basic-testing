@@ -5,6 +5,12 @@ import {
   TransferFailedError,
 } from '.';
 
+import { random } from 'lodash';
+
+jest.mock('lodash', () => ({
+  random: jest.fn(),
+}));
+
 describe('BankAccount', () => {
   test('should create account with initial balance', () => {
     const initialBalance = 5;
@@ -80,6 +86,7 @@ describe('BankAccount', () => {
   });
 
   test('fetchBalance should return number in case if request did not failed', async () => {
+    (random as jest.Mock).mockImplementationOnce(() => 10);
     const initialBalance = 5;
     const usersAccount = getBankAccount(initialBalance);
     const fetchedBalance = await usersAccount.fetchBalance();
@@ -87,6 +94,7 @@ describe('BankAccount', () => {
   });
 
   test('should set new balance if fetchBalance returned number', async () => {
+    (random as jest.Mock).mockImplementationOnce(() => 10);
     const initialBalance = 5;
     const usersAccount = getBankAccount(initialBalance);
 
@@ -95,6 +103,7 @@ describe('BankAccount', () => {
   });
 
   test('should throw SynchronizationFailedError if fetchBalance returned null', async () => {
+    (random as jest.Mock).mockImplementationOnce(() => null);
     const initialBalance = 0;
     const usersAccount = getBankAccount(initialBalance);
 
